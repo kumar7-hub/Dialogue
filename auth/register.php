@@ -1,11 +1,12 @@
 <?php
     require_once '../config.php';
 
-    $result = false;
     $error = "";
-    $success = "Account created successfully!";
 
     if (isset($_POST['register'])) {
+
+        $result = false;
+        $success = "Account created successfully!";
 
         $username = htmlspecialchars($_POST['username']);
         $email = htmlspecialchars($_POST['email']);
@@ -51,7 +52,6 @@
                     // Set session variables for global access
                     $_SESSION['loggedIn'] = true;
                     $_SESSION['username'] = $username;
-                    $_SESSION['email'] = $email;
 
                     // Redirect to home page
                     header("Location: ../index.php");
@@ -61,7 +61,7 @@
             catch (Exception $e) {
                 error_log("Sign in error: {$e->getMessage()}\n");
 
-                // Alert error to user
+                // Alert user
                 $message = "An error occurred. Please try again later.";
                 echo "<script>alert('$message');</script>";
             }
@@ -100,9 +100,7 @@
                 </div>
 
                 <?php
-                    if ($error) {
-                        echo "<p class='error'>*{$error}*</p>";
-                    }
+                    if ($error) echo "<p class='error'>*{$error}*</p>";
                 ?>
 
                 <!-- Sign Up Button -->
