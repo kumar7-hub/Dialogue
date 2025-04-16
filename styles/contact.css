@@ -1,0 +1,43 @@
+.contact {
+    display: flex;
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+
+.field {
+    width: 20vw;
+}
+
+textarea {
+    padding: 15px 25px 0 25px;
+    width: 100%;
+    height: auto;
+    resize: none;
+    overflow-y: auto;
+}
+
+#contact-submit {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    color: white;
+}
+
+.right-column p {
+    margin: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.1vw;
+}
