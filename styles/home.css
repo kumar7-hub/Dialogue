@@ -24,7 +24,52 @@ body {
 
 .container {
     display: flex;
+    padding-bottom: 50px;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
+    height: auto;
+}
+
+#home-title {
+    margin-top: 80px !important;
+    margin-bottom: 30px;
+    width: fit-content; 
+    font-size: 3vw;
+    font-weight: bold;
+    font-family: "Sky Ultra Condensed", "Arial", sans-serif;
+    letter-spacing: 1px;
+    color: #E0E0E0;
+}
+
+.post {
+    margin-top: 20px;
+    width: 70%;
+    height: auto;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* border-radius: 16px; */
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.05), 0 12px 24px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+    text-align: center;
+    cursor: pointer;
+}
+
+.postInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px 0px 20px;
+}
+
+.postInfo span {
+    color: #caf0f8;
+}
+
+.postTitle {
+    display: inline-block;
+    padding-bottom: 10px;
+    width: fit-content;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #E0E0E0;
 }
