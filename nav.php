@@ -15,12 +15,12 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Topics</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Technology</a></li>
-                        <li><a class="dropdown-item" href="#">Travel</a></li>
-                        <li><a class="dropdown-item" href="#">Food</a></li>
-                        <li><a class="dropdown-item" href="#">Lifestyle</a></li>
-                        <li><a class="dropdown-item" href="#">Cars</a></li>
-                        <li><a class="dropdown-item" href="#">Sports</a></li>
+                        <li><a class="dropdown-item" href="#" style="color: cyan;">Technology</a></li>
+                        <li><a class="dropdown-item" href="#" style="color: rgb(245, 21, 245);">Travel</a></li>
+                        <li><a class="dropdown-item" href="#" style="color: orange;">Food</a></li>
+                        <li><a class="dropdown-item" href="#" style="color: gold;">Lifestyle</a></li>
+                        <li><a class="dropdown-item" href="#" style="color: springgreen;">Cars</a></li>
+                        <li><a class="dropdown-item" href="#" style="color: red;">Sports</a></li>
                     </ul>
                 </li>
 
