@@ -80,10 +80,10 @@
             <form id="delete-form" class="form" action="delete.php" method="POST" autocomplete="off">
                 <!-- Delete Input Fields -->
                 <div>
-                    <input id="delete-username" type="text" name="username" placeholder="Username" required><br>
+                    <input id="delete-username" type="text" name="username" placeholder="Username" autocomplete="off" required><br>
                 </div>
                 <div class="field">
-                    <input id="delete-password" type="password" name="password" placeholder="Password" required><br>
+                    <input id="delete-password" type="password" name="password" placeholder="Password" autocomplete="off" required><br>
                 </div>    
 
                 <?php

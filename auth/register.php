@@ -6,7 +6,7 @@
     if (isset($_POST['register'])) {
 
         $result = false;
-        $success = "Account created successfully!";
+        $success = "Account created successfully";
 
         $username = htmlspecialchars($_POST['username']);
         $email = htmlspecialchars($_POST['email']);
@@ -87,16 +87,16 @@
             <form id="signup-form" class="form" action="register.php" method="POST" autocomplete="off">
                 <!-- Sign Up Input Fields -->
                 <div>
-                    <input id="signup-username" type="text" name="username" placeholder="Username" required><br>
+                    <input id="signup-username" type="text" name="username" placeholder="Username" autocomplete="off" required><br>
                 </div>
                 <div class="field">
-                    <input id="signup-email" type="email" name="email" placeholder="Email" required><br>
+                    <input id="signup-email" type="email" name="email" placeholder="Email" autocomplete="off" required><br>
                 </div>
                 <div class="field">
-                    <input id="signup-password" type="password" name="password" placeholder="Password" required><br>
+                    <input id="signup-password" type="password" name="password" placeholder="Password" autocomplete="off" required><br>
                 </div>    
                 <div class="field">
-                    <input id="signup-confirm-password" type="password" name="confirmPassword" placeholder="Confirm Password" required><br>
+                    <input id="signup-confirm-password" type="password" name="confirmPassword" placeholder="Confirm Password" autocomplete="off" required><br>
                 </div>
 
                 <?php

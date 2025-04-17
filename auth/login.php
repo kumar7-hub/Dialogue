@@ -76,10 +76,10 @@
             <form id="login-form" class="form" action="login.php" method="POST" autocomplete="off">
                 <!-- Login Input Fields -->
                 <div>
-                    <input id="login-username" type="text" name="username" placeholder="Username" required><br>
+                    <input id="login-username" type="text" name="username" placeholder="Username" autocomplete="off" required><br>
                 </div>
                 <div class="field">
-                    <input id="login-password" type="password" name="password" placeholder="Password" required><br>
+                    <input id="login-password" type="password" name="password" placeholder="Password" autocomplete="off" required><br>
                 </div>
                 
                 <?php
