@@ -1,3 +1,10 @@
+#contact-us {
+    margin-top: 60px !important;
+    margin-bottom: 30px;
+    width: 16vw; 
+    font-weight: bold;
+}
+
 .contact {
     display: flex;
 }
