@@ -1,5 +1,5 @@
 #contact-us {
-    margin-top: 60px !important;
+    margin-top: 80px !important;
     margin-bottom: 30px;
     width: 16vw; 
     font-weight: bold;
@@ -21,12 +21,16 @@
     width: 20vw;
 }
 
-textarea {
+.message {
     padding: 15px 25px 0 25px;
     width: 100%;
-    height: auto;
+    height: 25vh !important;
     resize: none;
     overflow-y: auto;
+}
+
+.message::-webkit-scrollbar {
+    background-color: transparent;
 }
 
 #contact-submit {

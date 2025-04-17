@@ -84,7 +84,7 @@ body {
 input[type=text], 
 input[type=password],
 input[type=email],
-textarea {
+.message {
     margin-top: 13px;
     padding-left: 25px;
     padding-right: 25px;
@@ -100,7 +100,7 @@ textarea {
 input[type=text]:hover, 
 input[type=password]:hover,
 input[type=email]:hover,
-textarea:hover {
+.message:hover {
     background-color: rgba(0, 0, 0, 0.45);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
 }
@@ -108,7 +108,7 @@ textarea:hover {
 input[type=text]:focus, 
 input[type=password]:focus,
 input[type=email]:focus,
-textarea:focus {
+.message:focus {
     border: 1px solid #ffffff55;
     background-color: rgba(0, 0, 0, 0.55);
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
@@ -117,7 +117,8 @@ textarea:focus {
 
 input[type=text]::placeholder, 
 input[type=password]::placeholder,
-input[type=email]::placeholder {
+input[type=email]::placeholder,
+.message::placeholder {
     color: #fff;
     font-size: 0.85vw;
     opacity: 0.5;
