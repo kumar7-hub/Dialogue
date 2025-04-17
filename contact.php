@@ -1,3 +1,59 @@
+<?php
+    require_once 'config.php';
+
+    $error = "";
+    $customMessage = [
+        'p1' => "Have a question, concern, or feedback?",
+        'p2' => "Fill out this form!"
+    ];
+
+    if (isset($_POST['contactSubmit'])) {
+
+        $result = false;
+
+        $name = htmlspecialchars($_POST['name']);
+        $email = htmlspecialchars($_POST['email']);
+        $userMessage = htmlspecialchars($_POST['message']);
+
+        // Check if fields are empty 
+        if (empty($name) || empty($email) || empty($userMessage)) $error = "Please fill in all fields";
+        // Check if email format is valid 
+        else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $error = "Invalid email format";
+
+        if (empty($error)) {
+            try {
+                // Send mail 
+                $to      = 'skumar2@csub.edu';
+                $subject = "Dialogue - {$name}";
+                $message = $userMessage;
+                $headers = array(
+                    'From' => $email,
+                    'Reply-To' => $email,
+                    'X-Mailer' => 'PHP/' . phpversion()
+                );
+
+                $success = mail($to, $subject, $message, $headers);
+
+                if ($success) {
+                    $customMessage['p1'] = "Thank you for your message!";
+                    $customMessage['p2'] = "We'll get back to you ASAP";
+                }
+                else {
+                    $customMessage['p1'] = "An error occurred";
+                    $customMessage['p2'] = "Please try again later";
+                }
+            }
+            catch (Exception $e) {
+                error_log("Send message error: {$e->getMessage()}\n");
+
+                // Alert user
+                $message = "An error occurred. Please try again later.";
+                echo "<script>alert('$message');</script>";
+            }
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,26 +74,30 @@
 
         <div class="content-container contact">
             <!-- Left Side -->
-            <form id="contact-form" class="left-column" action="contact.php" method="GET" autocomplete="off">
+            <form id="contact-form" class="left-column" action="contact.php" method="POST" autocomplete="off">
                 <div style="margin-top: 40px;">
-                    <input id="uname" type="text" name="uname" placeholder="Username" required><br>
+                    <input id="name" type="text" name="name" placeholder="Name" autocomplete="off" required><br>
                 </div>
 
                 <div class="field">
-                    <input id="email" type="email" name="email" placeholder="Email" required><br>
+                    <input id="email" type="email" name="email" placeholder="Email" autocomplete="off" required><br>
                 </div>
 
                 <div class="field">
-                    <textarea id="message" class="message" name="message" cols="35" rows="15" placeholder="Message" required></textarea>
+                    <textarea id="message" class="message" name="message" cols="35" rows="15" placeholder="Message" autocomplete="off" required></textarea>
                 </div>
+
+                <?php
+                    if ($error) echo "<p class='error'>*{$error}*</p>";
+                ?>
 
                 <input id="contact-submit" class="submit" type="submit" name="contactSubmit" value="Send Message">
             </form>
 
             <!-- Right Side -->
             <div class="right-column">
-                <p style="font-weight: bold; font-size: 1.2vw;">Have a question, concern, or feedback?</p>
-                <p>Fill out this form!</p>
+                <p style="font-weight: bold; font-size: 1.2vw;"><?= $customMessage['p1'] ?></p>
+                <p><?= $customMessage['p2'] ?></p>
             </div>
         </div>
     </div>
