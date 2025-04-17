@@ -9,8 +9,6 @@
 
     if (isset($_POST['contactSubmit'])) {
 
-        $result = false;
-
         $name = htmlspecialchars($_POST['name']);
         $email = htmlspecialchars($_POST['email']);
         $userMessage = htmlspecialchars($_POST['message']);
@@ -44,7 +42,7 @@
                 }
             }
             catch (Exception $e) {
-                error_log("Send message error: {$e->getMessage()}\n");
+                error_log("Send mail error: {$e->getMessage()}\n");
 
                 // Alert user
                 $message = "An error occurred. Please try again later.";
@@ -75,14 +73,13 @@
         <div class="content-container contact">
             <!-- Left Side -->
             <form id="contact-form" class="left-column" action="contact.php" method="POST" autocomplete="off">
+                <!-- Contact Input Fields -->
                 <div style="margin-top: 40px;">
                     <input id="name" type="text" name="name" placeholder="Name" autocomplete="off" required><br>
                 </div>
-
                 <div class="field">
                     <input id="email" type="email" name="email" placeholder="Email" autocomplete="off" required><br>
                 </div>
-
                 <div class="field">
                     <textarea id="message" class="message" name="message" cols="35" rows="15" placeholder="Message" autocomplete="off" required></textarea>
                 </div>
@@ -91,6 +88,7 @@
                     if ($error) echo "<p class='error'>*{$error}*</p>";
                 ?>
 
+                <!-- Send Message Button -->
                 <input id="contact-submit" class="submit" type="submit" name="contactSubmit" value="Send Message">
             </form>
 
