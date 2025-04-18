@@ -13,8 +13,8 @@
     ];
 
     // Fetch topic from URL, else default to empty string (home page)
-    $topic = $_GET['topic'] ?? '';
-    // 
+    $topic = isset($_GET['topic']) && in_array($_GET['topic'], array_keys($categoryColors)) ? $_GET['topic'] : '';
+    // Fetch user's search input, else default to empty string
     $search = isset($_POST['search']) ? htmlspecialchars(trim($_POST['search'])) : '';
 
     try {
