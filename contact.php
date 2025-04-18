@@ -75,7 +75,7 @@
     <?php include 'nav.php'; ?>
 
     <div class="container">
-        <h1 id="contact-us" class="title" style="width: 16vw; margin-top: 80px;">Contact Us</h1>
+        <h1 id="contact-us" class="title">Contact Us</h1>
 
         <div class="content-container contact">
             <!-- Left Side -->

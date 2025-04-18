@@ -1,7 +1,7 @@
 #contact-us {
     margin-top: 80px !important;
     margin-bottom: 30px;
-    width: 16vw; 
+    width: fit-content; 
     font-weight: bold;
 }
 
