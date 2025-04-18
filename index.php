@@ -12,14 +12,18 @@
         'Sports' => "red"
     ];
 
+    // Fetch topic from URL, else default to empty string (home page)
+    $topic = $_GET['topic'] ?? '';
+    // 
+    $search = htmlspecialchars($_POST['search']) ?? '';
+
     try {
         // Create connection to database
         $db = getConnection();
 
-        // Fetch random posts from all categories
-        $query = $db->prepare("CALL DisplayPosts(?)");
-        $param = '';
-        $query->bind_param('s', $param);
+        // Retrieve posts from database
+        $query = $db->prepare("CALL DisplayPosts(?, ?)");
+        $query->bind_param('ss', $topic, $search);
         $query->execute();
 
         $result = $query->get_result();
@@ -29,6 +33,7 @@
                 $likes = $row['likes'] ?? 0;
                 $color = $categoryColors[$row['name']] ?? 'gray';
 
+                // Build post div
                 $postDiv .= "<div id='{$row['pid']}' class='post'>
                                 <div>
                                     <div class='postInfo'>
@@ -70,7 +75,12 @@
     <?php include 'nav.php'; ?>
 
     <div class="container">
-        <h1 id="home-title">Home</h1>
+        <h1 id="home-title">
+            <?php
+                if ($topic !== '') echo $topic;
+                else echo 'Home';
+            ?>
+        </h1>
 
         <!-- Display posts -->
         <?= $postDiv ?>
@@ -96,4 +106,5 @@
         </div> -->
     </div>
 </body>
+    <script src="script.js"></script>
 </html>
