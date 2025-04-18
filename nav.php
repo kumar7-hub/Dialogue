@@ -41,7 +41,10 @@
             <!-- Search Bar -->
             <?php 
                 if (!$contact) {
-                    echo "<form class='d-flex' action='index.php?topic={$_GET['topic']}' method='POST'>
+                    $action = 'index.php';
+                    if (isset($_GET['topic'])) $action = "{$action}?topic={$_GET['topic']}";
+
+                    echo "<form class='d-flex' action='{$action}' method='POST'>
                             <input id='search' class='form-control me-2' type='text' name='search' placeholder='Search' autocomplete='off'>
                             <input id='searchButton' class='btn btn-primary' type='submit' value='Search'>
                          </form>";

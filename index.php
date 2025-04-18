@@ -15,7 +15,7 @@
     // Fetch topic from URL, else default to empty string (home page)
     $topic = $_GET['topic'] ?? '';
     // 
-    $search = htmlspecialchars($_POST['search']) ?? '';
+    $search = isset($_POST['search']) ? htmlspecialchars(trim($_POST['search'])) : '';
 
     try {
         // Create connection to database
@@ -30,7 +30,7 @@
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $likes = $row['likes'] ?? 0;
+                $likes = $row['likeCount'] ?? 0;
                 $color = $categoryColors[$row['name']] ?? 'gray';
 
                 // Build post div
