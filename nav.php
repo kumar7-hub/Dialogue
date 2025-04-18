@@ -1,6 +1,7 @@
 <?php
-    $contact = false;
-    if (str_contains($_SERVER['PHP_SELF'], 'contact.php')) $contact = true;
+    $index = true;
+    $indexPath = '/~skumar/3680/final/index.php';
+    if ($_SERVER['PHP_SELF'] !== $indexPath) $index = false;
 ?>
 
 <nav class="navbar navbar-expand-sm">
@@ -25,22 +26,25 @@
                 </li>
 
                 <li class="nav-item"><a class="nav-link" href="contact.php">Support</a></li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)">Link</a>
-                </li> -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Settings</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Sign Out</a></li>
-                        <li><a class="dropdown-item" href="./auth/delete.php">Delete Account</a></li>
-                    </ul>
-                </li>
+
+                <?php
+                    if (!isset($_SESSION['loggedIn'])) echo '<li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>';
+                    else {
+                       echo '<li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Settings</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                                    <li><a class="dropdown-item" href="logout.php">Sign Out</a></li>
+                                    <li><a class="dropdown-item" href="delete.php">Delete Account</a></li>
+                                </ul>
+                            </li>';
+                    }
+                ?>
             </ul>
 
             <!-- Search Bar -->
             <?php 
-                if (!$contact) {
+                if ($index) {
                     $action = 'index.php';
                     if (isset($_GET['topic'])) $action = "{$action}?topic={$_GET['topic']}";
 
