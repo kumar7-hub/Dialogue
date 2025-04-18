@@ -8,10 +8,10 @@
         $result = false;
         $success = "Account created successfully";
 
-        $username = htmlspecialchars($_POST['username']);
-        $email = htmlspecialchars($_POST['email']);
-        $password = htmlspecialchars($_POST['password']);
-        $confirmPassword = htmlspecialchars($_POST['confirmPassword']);
+        $username = htmlspecialchars(trim($_POST['username']));
+        $email = htmlspecialchars(trim($_POST['email']));
+        $password = htmlspecialchars(trim($_POST['password']));
+        $confirmPassword = htmlspecialchars(trim($_POST['confirmPassword']));
 
         // Check if fields are empty 
         if (empty($username) || empty($password) || empty($confirmPassword) || empty($email)) {

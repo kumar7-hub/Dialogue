@@ -7,8 +7,8 @@
 
         $result = false;
 
-        $username = htmlspecialchars($_POST['username']);
-        $password = htmlspecialchars($_POST['password']);
+        $username = htmlspecialchars(trim($_POST['username']));
+        $password = htmlspecialchars(trim($_POST['password']));
 
         // Check if fields are empty 
         if (empty($username) || empty($password)) $error = "Please fill in all fields";
