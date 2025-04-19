@@ -179,7 +179,7 @@ input[type=email]::placeholder,
     color: #f2e9e4;
 }
 
-.error {
+.error, .success {
     margin-top: 20px;
     margin-bottom: 0px;
     font-family: Arial, Helvetica, sans-serif;
@@ -187,4 +187,8 @@ input[type=email]::placeholder,
     font-size: 1vw;
     text-align: center;
     color: #ff4d4d;
+}
+
+.success {
+    color: #4caf50;
 }
