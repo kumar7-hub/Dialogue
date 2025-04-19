@@ -54,22 +54,40 @@ body {
     cursor: pointer;
 }
 
-.postInfo {
+.post-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px 0px 20px;
 }
 
-.postInfo span {
+.post-info span {
     color: #caf0f8;
 }
 
-.postTitle {
+.like-count {
+    color: salmon !important;
+}
+
+.post-title {
     display: inline-block;
     padding-bottom: 10px;
     width: fit-content;
     font-size: 1rem;
     font-weight: bold;
     color: #E0E0E0;
+}
+
+.thumbs-up {
+   margin-right: 5px;
+   color: #ffffff;
+}
+
+.thumbs-up:hover {
+   color: #00bfff;
+}
+
+.thumbs-up-success {
+    margin-right: 5px;
+    color: #00bfff;
 }
