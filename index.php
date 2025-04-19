@@ -32,12 +32,12 @@
         // Build posts html
         forEach($rows as $row) {
             $likes = $row['likeCount'] ?? 0;
-            $color = $categoryColors[$row['name']] ?? 'gray';
+            $color = $categoryColors[$row['name']];
 
             // Check if user has liked the post
             isset($_SESSION['postIDS']) && in_array($row['pid'], $_SESSION['postIDS']) ? $thumbsUpClass = 'thumbs-up-success' : $thumbsUpClass = 'thumbs-up';
 
-            $postDiv .= "<div id='{$row['pid']}' class='post'>
+            $postDiv .= "<div id='{$row['pid']}' class='post category-{$row['name']}'>
                             <div>
                                 <div class='post-info'>
                                     <div>
