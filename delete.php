@@ -2,6 +2,13 @@
     require_once 'config.php';
 
     $error = "";
+    $categories = ['Technology', 'Travel', 'Food', 'Lifestyle', 'Cars', 'Sports'];
+
+    // Redirect to category page if topic is accessed from delete account page
+    if (isset($_GET['topic']) && in_array($_GET['topic'], $categories)) {
+        header("Location: index.php?topic={$_GET['topic']}");
+        exit;
+    }
 
     if (isset($_POST['deleteAccount'])) {
 
