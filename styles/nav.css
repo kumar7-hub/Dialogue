@@ -59,10 +59,24 @@
     max-width: 400px;
 }
 
+.search-container {
+    flex: 1;
+    position: relative;
+}
+
+.search-icon {
+    top: 50%;
+    left: 12px;
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    transform: translateY(-50%);
+}
+
 .navbar form .form-control {
     flex: 1;
     margin-right: 10px;
-    padding: 0 15px;
+    padding: 0 15px 0 35px;
     height: 40px;
     font-size: 0.95rem;
     background: rgba(255, 255, 255, 0.1);
@@ -73,9 +87,9 @@
     transition: all 0.3s ease;
 }
 
-.navbar form .form-control::placeholder {
+/* .navbar form .form-control::placeholder {
     color: #ddd;
-}
+} */
 
 .navbar form .form-control:focus {
     background: rgba(255, 255, 255, 0.2);

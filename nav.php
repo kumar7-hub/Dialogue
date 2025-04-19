@@ -28,16 +28,18 @@
                 <li class="nav-item"><a class="nav-link" href="contact.php">Support</a></li>
 
                 <?php
+                    // Show login link if not logged in
                     if (!isset($_SESSION['loggedIn'])) echo '<li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>';
                     else {
-                       echo '<li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Settings</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                                    <li><a class="dropdown-item" href="logout.php">Sign Out</a></li>
-                                    <li><a class="dropdown-item" href="delete.php">Delete Account</a></li>
-                                </ul>
-                            </li>';
+                        // If logged in, show settings dropdown menu 
+                        echo '<li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Settings</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="profile.php">Profile</a></li>
+                                        <li><a class="dropdown-item" href="logout.php">Sign Out</a></li>
+                                        <li><a class="dropdown-item" href="delete.php">Delete Account</a></li>
+                                    </ul>
+                              </li>';
                     }
                 ?>
             </ul>
@@ -49,7 +51,10 @@
                     if (isset($_GET['topic'])) $action = "{$action}?topic={$_GET['topic']}";
 
                     echo "<form class='d-flex' action='{$action}' method='POST'>
-                            <input id='search' class='form-control me-2' type='text' name='search' placeholder='Search' autocomplete='off'>
+                            <div class='search-container'>
+                                <i class='fa-solid fa-magnifying-glass search-icon'></i>
+                                <input id='search' class='form-control me-2' type='text' name='search' autocomplete='off'>
+                            </div>
                             <input id='searchButton' class='btn btn-primary' type='submit' value='Search'>
                          </form>";
                 }
