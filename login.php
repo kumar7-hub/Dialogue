@@ -2,6 +2,14 @@
     require_once 'config.php';
 
     $error = "";
+    $postIDS = [];
+    $categories = ['Technology', 'Travel', 'Food', 'Lifestyle', 'Cars', 'Sports'];
+
+    // Redirect to category page if topic is accessed from login page
+    if (isset($_GET['topic']) && in_array($_GET['topic'], $categories)) {
+        header("Location: index.php?topic={$_GET['topic']}");
+        exit;
+    }
 
     if (isset($_POST['login'])) {
 
@@ -25,9 +33,6 @@
                 
                 $result = $query->get_result();
 
-                // Close connection to database 
-                closeConnection($db);
-
                 if ($result->num_rows === 1) {
                     $row = $result->fetch_assoc();
 
@@ -40,6 +45,23 @@
                         $_SESSION['loggedIn'] = true;
                         $_SESSION['username'] = $username;
 
+                        // Retrieve id of posts liked by user
+                        $query = $db->prepare("SELECT pid FROM User JOIN Likes ON User.uid = Likes.uid WHERE username = ?");
+                        $query->bind_param('s', $_SESSION['username']);
+                        $query->execute();
+            
+                        $result = $query->get_result();
+            
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $postIDS[] = $row['pid'];
+                            }
+
+                            $_SESSION['postIDS'] = $postIDS;
+                        }
+
+                        // Close connection to database
+                        closeConnection($db);
                         // Redirect to home page
                         header("Location: index.php");
                         exit;
