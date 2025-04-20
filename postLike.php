@@ -15,12 +15,12 @@
             $row = $result->fetch_assoc();
 
             if ($row['Message'] === 'liked') {
-                $status = true;
+                $liked = true;
                 // Add postID of liked post to session
                 $_SESSION['postIDS'][] = $_POST['postID'];
             }
             else {
-                $status = false;
+                $liked = false;
                 // Remove postID of unliked post from session
                 $_SESSION['postIDS'] = array_diff($_SESSION['postIDS'], [$_POST['postID']]);
             }
@@ -29,10 +29,10 @@
             closeConnection($db);
 
             // Send success response
-            echo json_encode(['success' => true, 'status' => $status]);
+            echo json_encode(['success' => true, 'liked' => $liked]);
         }
         catch (Exception $e) {
-            error_log("Like post error: {$e->getMessage()}\n");
+            error_log("Post like error: {$e->getMessage()}\n");
         }
     }
     else {
