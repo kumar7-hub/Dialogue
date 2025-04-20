@@ -91,6 +91,7 @@ body {
 .thumbs-up {
    margin-right: 5px;
    color: #ffffff;
+   cursor: pointer;
 }
 
 .thumbs-up:hover {
@@ -100,6 +101,7 @@ body {
 .thumbs-up-success {
     margin-right: 5px;
     color: #00bfff;
+    cursor: pointer;
 }
 
 .category-Technology:hover {
@@ -119,4 +121,108 @@ body {
 }
 .category-Sports:hover {
     box-shadow: 0 0 12px rgba(255, 0, 0, 0.7); 
+}
+  
+.modal-dialog {
+    display: flex;
+    /* width: 100%;
+    max-width: 500px; */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    max-height: 70vh; 
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(10px);
+    color: white;
+    overflow: hidden;
+}
+
+.modal-body {
+    padding: 20px;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.35);
+    border-radius: 10px;
+}
+
+.modal-header, .modal-footer {
+    border: none;
+    background-color: transparent;
+}
+
+.comment-header {
+    margin-top: 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #E0E0E0;
+    text-align: center;
+}
+
+.comment {
+    margin-top: 10px;
+    padding: 10px 20px 0px 20px;
+    width: 100%;
+    height: auto;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.comment-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comment-title {
+    display: inline-block;
+    padding-bottom: 10px;
+    width: fit-content;
+    font-size: 1rem;
+    color: #E0E0E0;
+}
+
+.comment-field {
+    padding: 8px 10px 0 10px;
+    width: 100%;
+    height: 15vh;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.35);
+    color: #E0E0E0;
+    resize: none;
+    overflow-y: auto;
+}
+
+.comment-field:hover {
+    background-color: rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.comment-field:focus {
+    border: 1px solid #ffffff55;
+    background-color: rgba(0, 0, 0, 0.55);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    outline: none;
+}
+
+.comment-field::placeholder {
+    color: #fff;
+    font-size: 0.9rem;
+    opacity: 0.5;
+}
+
+.comment-field::-webkit-scrollbar {
+    background-color: transparent;
 }
