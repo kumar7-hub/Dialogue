@@ -3,6 +3,10 @@
 
     $error = "";
     $postDiv = "";
+    $modals = "";
+    $modalID = 0;
+    $rows = [];
+    // $comments = [];
     $categoryColors = [
         'Technology' => "cyan",
         'Travel' => "rgb(245, 21, 245)",
@@ -29,26 +33,55 @@
         $result = $query->get_result();
         if ($result->num_rows > 0) $rows = $result->fetch_all(MYSQLI_ASSOC);
 
-        // Build posts html
         forEach($rows as $row) {
+
             $likes = $row['likeCount'] ?? 0;
             $color = $categoryColors[$row['name']];
+            $modalID += 1;
 
             // Check if user has liked the post
             isset($_SESSION['postIDS']) && in_array($row['pid'], $_SESSION['postIDS']) ? $thumbsUpClass = 'thumbs-up-success' : $thumbsUpClass = 'thumbs-up';
 
-            $postDiv .= "<div id='{$row['pid']}' class='post category-{$row['name']}'>
+            // Build posts html
+            $postDiv .= "<div class='post category-{$row['name']}' data-bs-toggle='modal' data-bs-target='#modal-{$modalID}'>
                             <div>
                                 <div class='post-info'>
-                                    <div>
-                                        <span><strong style='color: {$color};'>{$row['name']}</strong> &bull; pikachu &bull; <span style='color: lightgray;'>{$row['created_at']}</span></span>
-                                    </div>
-                                    <div>
-                                        <i class='fa-solid fa-thumbs-up {$thumbsUpClass}'></i>
-                                        <span class='like-count'>{$likes}</span>
-                                    </div>
+                                    <span><strong style='color: {$color};'>{$row['name']}</strong> &bull; {$row['username']}</span>
+                                    <span style='color: lightgray;'>{$row['created_at']}</span>
                                 </div>
                                 <span class='post-title'>{$row['title']}</span>
+                            </div>
+                        </div>";
+
+            // Build modals html
+            $modals .= "<div class='modal' id='modal-{$modalID}'>
+                            <div class='modal-dialog modal-dialog-scrollable'>
+                                <div id='{$row['pid']}' class='modal-content'>
+                                    <div class='modal-header'>
+                                        <h4 class='modal-title'>{$row['title']}</h4>
+                                        <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+                                    </div>
+
+                                    <div class='post-info'>
+                                        <div>
+                                            <span><strong style='color: {$color};'>{$row['name']}</strong> &bull; {$row['username']} &bull; <span style='color: lightgray;'>{$row['created_at']}</span></span>
+                                        </div>
+                                        <div>
+                                            <i class='fa-solid fa-thumbs-up {$thumbsUpClass}'></i>
+                                            <span class='like-count'>{$likes}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class='modal-body'>
+                                        <p>{$row['content']}</p>
+
+                                        <div class='comment-header'>Comments</div>
+                                    </div>
+
+                                    <form class='modal-footer' action='index.php' method='POST'>
+                                        <textarea class='comment-field' name='userComment' cols='35' rows='15' placeholder='Comment'></textarea>
+                                    </form>
+                                </div>
                             </div>
                         </div>";
         }
@@ -90,24 +123,58 @@
 
         <!-- Display posts -->
         <?= $postDiv ?>
+        <!-- Display modals -->
+        <?= $modals ?>
 
         <script>
-            // Fetch all elements (posts) with class 'post'
-            const posts = document.querySelectorAll('.post');
+            // Fetch all elements (posts) with class '.modal-content'
+            const posts = document.querySelectorAll('.modal-content');
 
-            posts.forEach(post => {
+            posts.forEach(async (post) => {
                 const postID = post.id;
                 let thumbsUp = post.querySelector('i');
                 let likeCount = post.querySelector('.like-count');
+                let modalBody = post.querySelector('.modal-body');
 
-                // Add event listeners to all posts
-                post.addEventListener('click', () => {
-                    // console.log(post);
+                let commentSection = document.createElement('div');
+                commentSection.classList.add('comment');
+                
+                // Source: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest_API/Using_FormData_Objects
+                const postData = new FormData();
+                postData.append('post_id', postID);
+
+                const out = await fetch('fetchComments.php', {
+                    method: 'POST', 
+                    body: postData
                 });
+
+                const output = await out.json();
+                if (output.success) {
+                    const comments = output.postComments;
+                    // Build comment section
+                    comments.forEach(comment => {
+                        commentSection.innerHTML += `<div>
+                                                        <div class='comment-info'>
+                                                            <span style='color: #ff65be;'>${comment['username']}</span>
+                                                            <span style='color: lightgray;'>${comment['created_at']}</span>
+                                                        </div>
+                                                        <span class='comment-title'>${comment['comment']}</span>
+                                                    </div>`;
+                    });
+
+                    modalBody.appendChild(commentSection);
+                }
+                // else console.log(`${postID}: ${output.message}`);
+                
+                // Add event listeners to all posts
+                // post.addEventListener('click', () => {
+                //     // console.log(post);
+
+                // });
 
                 // Add event listener to thumbs-up icon
                 thumbsUp.addEventListener('click', async () => {
-                    // Source: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest_API/Using_FormData_Objects
+
                     const formData = new FormData();
                     formData.append('postID', postID);
 
@@ -119,7 +186,7 @@
                     const result = await res.json();
                     if (result.success) {
                         // Post is liked 
-                        if (result.status) {
+                        if (result.liked) {
                             thumbsUp.classList.remove('thumbs-up');
                             thumbsUp.classList.add('thumbs-up-success');
                             likeCount.innerHTML = Number(likeCount.innerHTML) + 1;
@@ -136,30 +203,74 @@
             });
         </script>
 
-        <!-- <div class="post">
+        <!-- <div class='post' data-bs-toggle='modal' data-bs-target='#myModal'>
             <div>
-                <div class="postInfo">
-                    <div>
-                        <span><strong style="color: orange;">Technology</strong> &bull; pikachu &bull; <span style="color: lightgray;">2025-04-17</span></span>
-                    </div>
-                    <div>
-                        <i class="fa-solid fa-thumbs-up thumbs-up"></i>
-                        <span style="color: salmon;">10</span>
-                    </div>
+                <div class='post-info'>
+                    <span><strong style='color: cyan;'>Technology</strong> &bull; sonic</span>
+                    <span style='color: lightgray;'>2025-04-19</span>
                 </div>
-                <span class="postTitle">Is it worth getting TSA PreCheck?</span>
+                <span class='post-title'>Sonic Test</span>
             </div>
         </div>
 
-        <div class="post">
+        <div class='post' data-bs-toggle='modal' data-bs-target='#myModal'>
             <div>
-                <div class="postInfo">
-                    <span><strong style="color: orange;">Lifestyle</strong> &bull; pikachu &bull; 2025-04-17</span>
-                    <span style="color: salmon;">10</span>
+                <div class='post-info'>
+                    <span><strong style='color: cyan;'>Technology</strong> &bull; pikachu</span>
+                    <span style='color: lightgray;'>2025-04-19</span>
                 </div>
-                <span class="postTitle">Best places for men's apparel?</span>
+                <span class='post-title'>Pikachu Test</span>
             </div>
         </div> -->
+
+        <!-- The Modal -->
+        <!-- <div class='modal' id='myModal'>
+            <div class='modal-dialog modal-dialog-scrollable'>
+                <div class='modal-content'>
+                    <div class='modal-header'>
+                        <h4 class='modal-title'>Tips before purchasing a new car?</h4>
+                        <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+                    </div>
+
+                    <div class='post-info'>
+                        <div>
+                            <span><strong style='color: cyan;'>Technology</strong> &bull; pikachu &bull; <span style='color: lightgray;'>2025-04-19</span></span>
+                        </div>
+                        <div>
+                            <i class='fa-solid fa-thumbs-up thumbs-up'></i>
+                            <span class='like-count'>0</span>
+                        </div>
+                    </div>
+
+                    <div class='modal-body'>
+                        <div class="post-content">
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        </div>
+
+                        <div class="comment-container">
+                            <div class='comment-header'>Comments</div>
+
+                            <div class='comment'>
+                                <div>
+                                    <div class='comment-info'>
+                                        <span style='color: cyan;'>sonic</span>
+                                        <span style='color: lightgray;'>2025-04-19</span>
+                                    </div>
+                                    <span class='comment-title'>Watch youtube reviews before buying</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form class='modal-footer' action='index.php' method='POST'>
+                        <textarea class='comment-field' name='userComment' cols="35" rows="15" placeholder='Comment'></textarea>
+                    </form>
+
+                </div>
+            </div>
+        </div> -->
+
+
     </div>
 </body>
 </html>
