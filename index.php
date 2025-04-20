@@ -25,6 +25,18 @@
         // Create connection to database
         $db = getConnection();
 
+        // 
+        if (isset($_SESSION['loggedIn']) && isset($_GET['idPost'])) {
+            $userComment = htmlspecialchars(trim($_POST['userComment']));
+        
+            if ($userComment !== '') {
+                
+                $query = $db->prepare("INSERT INTO Comments (uid, pid, comment) VALUES (?, ?, ?)");
+                $query->bind_param('iis', $_SESSION['uid'], $_GET['idPost'], $userComment);
+                $query->execute();
+            }
+        }
+
         // Retrieve posts from database
         $query = $db->prepare("CALL DisplayPosts(?, ?)");
         $query->bind_param('ss', $topic, $search);
@@ -78,8 +90,9 @@
                                         <div class='comment-header'>Comments</div>
                                     </div>
 
-                                    <form class='modal-footer' action='index.php' method='POST'>
+                                    <form class='modal-footer' action='index.php?topic={$topic}&idPost={$row['pid']}' method='POST'>
                                         <textarea class='comment-field' name='userComment' cols='35' rows='15' placeholder='Comment'></textarea>
+                                        <input class='comment-button' type='submit' name='commentButton' value='Comment'>
                                     </form>
                                 </div>
                             </div>
@@ -131,6 +144,7 @@
             const posts = document.querySelectorAll('.modal-content');
 
             posts.forEach(async (post) => {
+
                 const postID = post.id;
                 let thumbsUp = post.querySelector('i');
                 let likeCount = post.querySelector('.like-count');
@@ -143,6 +157,7 @@
                 const postData = new FormData();
                 postData.append('post_id', postID);
 
+                // 
                 const out = await fetch('fetchComments.php', {
                     method: 'POST', 
                     body: postData
@@ -199,6 +214,19 @@
                         }
                     } 
                     else alert(result.message);
+                });
+
+                // 
+                post.querySelector('.modal-footer').addEventListener('submit', event => {
+                    let loggedIn = <?= isset($_SESSION['username']) ? 'true' : 'false' ?>;
+
+                    if (!loggedIn) {
+                        event.preventDefault();
+                        alert('You must be logged in to comment on posts');
+
+                        // Clear the comment textarea 
+                        post.querySelector('.comment-field').value = '';
+                    }
                 });
             });
         </script>
