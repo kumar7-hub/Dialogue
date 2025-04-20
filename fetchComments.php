@@ -9,7 +9,7 @@
             $db = getConnection();
             
             // Fetch post comments from database
-            $query = $db->prepare("SELECT username, comment, Comments.created_at FROM User JOIN Comments ON User.uid = Comments.uid WHERE pid = ?");
+            $query = $db->prepare("SELECT username, comment, Comments.created_at FROM User JOIN Comments ON User.uid = Comments.uid WHERE pid = ? ORDER BY Comments.created_at DESC");
             $query->bind_param('i', $_POST['post_id']);
             $query->execute();
             $result = $query->get_result();
