@@ -27,7 +27,7 @@
                 $db = getConnection();
 
                 // Check if username exists 
-                $query = $db->prepare("SELECT username, password FROM User WHERE username = ?");
+                $query = $db->prepare("SELECT uid, username, password FROM User WHERE username = ?");
                 $query->bind_param("s", $username);
                 $query->execute();
                 
@@ -43,11 +43,12 @@
                     else {
                         // Set session variables for global access
                         $_SESSION['loggedIn'] = true;
+                        $_SESSION['uid'] = $row['uid'];
                         $_SESSION['username'] = $username;
 
                         // Retrieve id of posts liked by user
-                        $query = $db->prepare("SELECT pid FROM User JOIN Likes ON User.uid = Likes.uid WHERE username = ?");
-                        $query->bind_param('s', $_SESSION['username']);
+                        $query = $db->prepare("SELECT pid FROM Likes WHERE uid = ?");
+                        $query->bind_param('i', $_SESSION['uid']);
                         $query->execute();
             
                         $result = $query->get_result();
