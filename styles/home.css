@@ -226,3 +226,29 @@ body {
 .comment-field::-webkit-scrollbar {
     background-color: transparent;
 }
+
+.comment-button {
+    margin-top: 20px;
+    padding: 7px;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #00bfff, #1e90ff);
+    box-shadow: 0 4px 10px rgba(0, 191, 255, 0.3);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+  
+.comment-button:hover {
+    background: linear-gradient(135deg, #1e90ff, #00bfff);
+    box-shadow: 0 6px 14px rgba(0, 191, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.comment-button:active {
+    box-shadow: 0 2px 5px rgba(0, 191, 255, 0.2);
+    transform: translateY(0);
+}
