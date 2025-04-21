@@ -35,6 +35,7 @@
                         echo '<li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Settings</a>
                                     <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createPost">Create Post</a></li>
                                         <li><a class="dropdown-item" href="profile.php">Profile</a></li>
                                         <li><a class="dropdown-item" href="logout.php">Sign Out</a></li>
                                         <li><a class="dropdown-item" href="delete.php">Delete Account</a></li>

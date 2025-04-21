@@ -6,7 +6,6 @@
     $modals = "";
     $modalID = 0;
     $rows = [];
-    // $comments = [];
     $categoryColors = [
         'Technology' => "cyan",
         'Travel' => "rgb(245, 21, 245)",
@@ -26,7 +25,7 @@
         $db = getConnection();
 
         // 
-        if (isset($_SESSION['loggedIn']) && isset($_GET['idPost'])) {
+        if (isset($_SESSION['loggedIn']) && isset($_POST['commentButton']) && isset($_GET['idPost'])) {
             $userComment = htmlspecialchars(trim($_POST['userComment']));
         
             if ($userComment !== '') {
@@ -35,6 +34,27 @@
                 $query->bind_param('iis', $_SESSION['uid'], $_GET['idPost'], $userComment);
                 $query->execute();
             }
+
+            // 
+            if ($topic !== '') header("Location: index.php?topic={$topic}");
+            else header("Location: index.php");
+        }
+
+        //
+        if (isset($_SESSION['loggedIn']) && isset($_POST['postSubmit']) && isset($_POST['categoryID'])) {
+            $postTitle = htmlspecialchars(trim($_POST['postTitle']));
+            $postContent = htmlspecialchars(trim($_POST['postContent']));
+        
+            if ($postTitle !== '' && $postContent !== '') {
+                
+                $query = $db->prepare("INSERT INTO Post (uid, cid, title, content) VALUES (?, ?, ?, ?)");
+                $query->bind_param('iiss', $_SESSION['uid'], $_POST['categoryID'], $postTitle, $postContent);
+                $query->execute();
+            }
+
+            // 
+            if ($topic !== '') header("Location: index.php?topic={$topic}");
+            else header("Location: index.php");
         }
 
         // Retrieve posts from database
@@ -91,7 +111,7 @@
                                     </div>
 
                                     <form class='modal-footer' action='index.php?topic={$topic}&idPost={$row['pid']}' method='POST'>
-                                        <textarea class='comment-field' name='userComment' cols='35' rows='15' placeholder='Comment'></textarea>
+                                        <textarea class='comment-field' name='userComment' cols='35' rows='15' placeholder='Comment' required></textarea>
                                         <input class='comment-button' type='submit' name='commentButton' value='Comment'>
                                     </form>
                                 </div>
@@ -134,13 +154,13 @@
             ?>
         </h1>
 
-        <!-- Display posts -->
+        <!-- Display Posts -->
         <?= $postDiv ?>
-        <!-- Display modals -->
+        <!-- Display Post Modals -->
         <?= $modals ?>
 
         <script>
-            // Fetch all elements (posts) with class '.modal-content'
+            // Fetch all elements (post modals) with class '.modal-content'
             const posts = document.querySelectorAll('.modal-content');
 
             posts.forEach(async (post) => {
@@ -231,28 +251,48 @@
             });
         </script>
 
-        <!-- <div class='post' data-bs-toggle='modal' data-bs-target='#myModal'>
-            <div>
-                <div class='post-info'>
-                    <span><strong style='color: cyan;'>Technology</strong> &bull; sonic</span>
-                    <span style='color: lightgray;'>2025-04-19</span>
+        <!-- Create Post Modal -->
+        <div class='modal' id='createPost'>
+            <div class='modal-dialog modal-dialog-scrollable'>
+                <div class='modal-content'>
+                    <div class='modal-header'>
+                        <h4 class='modal-title'>Create Post</h4>
+                        <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+                    </div>
+
+                    <form id='create-post-form' class='modal-body' action='index.php' method='POST' style='padding: 0px;'>
+                        <div class="category-selector">
+                            <input id="tech" type="radio" name="categoryID" value="1" hidden/>
+                            <label for="tech" style="color: cyan;">Technology</label>
+
+                            <input id="travel" type="radio" name="categorID" value="2" hidden />
+                            <label for="travel" style="color: rgb(245, 21, 245);">Travel</label>
+
+                            <input id="food" type="radio" name="categoryID" value="3" hidden />
+                            <label for="food" style="color: orange;">Food</label>
+
+                            <input id="lifestyle" type="radio" name="categoryID" value="4" hidden />
+                            <label for="lifestyle" style="color: gold;">Lifestyle</label>
+
+                            <input id="cars" type="radio" name="categoryID" value="5" hidden />
+                            <label for="cars" style="color: springgreen;">Cars</label>
+
+                            <input id="sports" type="radio" name="categoryID" value="6" hidden />
+                            <label for="sports" style="color: red;">Sports</label>
+                        </div>
+                        <div style='padding: 20px;'>
+                            <div>
+                                <input id="title-post" class='comment-field title-post' type="text" name="postTitle" placeholder="Title" autocomplete="off" required><br>
+                            </div>
+                            <textarea class='comment-field' name='postContent' cols='35' rows='15' placeholder='Text' required></textarea>
+                            <input class='modal-footer comment-button' type='submit' name='postSubmit' value='Create'>
+                        </div>
+                    </form>
                 </div>
-                <span class='post-title'>Sonic Test</span>
             </div>
         </div>
-
-        <div class='post' data-bs-toggle='modal' data-bs-target='#myModal'>
-            <div>
-                <div class='post-info'>
-                    <span><strong style='color: cyan;'>Technology</strong> &bull; pikachu</span>
-                    <span style='color: lightgray;'>2025-04-19</span>
-                </div>
-                <span class='post-title'>Pikachu Test</span>
-            </div>
-        </div> -->
-
-        <!-- The Modal -->
-        <!-- <div class='modal' id='myModal'>
+        
+        <!-- <div class='modal' id='createPost'>
             <div class='modal-dialog modal-dialog-scrollable'>
                 <div class='modal-content'>
                     <div class='modal-header'>
