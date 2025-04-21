@@ -49,7 +49,7 @@
                         closeConnection($db);
 
                         // Redirect to home page
-                        header("Location: index.php");
+                        header("Location: logout.php");
                         exit;
                     }
                 }
