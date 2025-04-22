@@ -6,17 +6,35 @@
     $modals = "";
     $modalID = 0;
     $rows = [];
-    $categoryColors = [
-        'Technology' => "cyan",
-        'Travel' => "rgb(245, 21, 245)",
-        'Food' => "orange",
-        'Lifestyle' => "gold",
-        'Cars' => "springgreen",
-        'Sports' => "red"
+    $categoryStyles = [
+        'Technology' => [
+            'color' => "cyan",
+            'icon' => "computer"
+        ],     
+        'Travel' => [
+            'color' => "rgb(245, 21, 245)",
+            'icon' => "plane"
+        ],
+        'Food' => [
+            'color' => "orange",
+            'icon' => "utensils"
+        ],
+        'Lifestyle' => [
+            'color' => "gold",
+            'icon' => "user"
+        ],
+        'Cars' => [
+            'color' => "springgreen",
+            'icon' => "car"
+        ],
+        'Sports' => [
+            'color' => "red",
+            'icon' => "medal"
+        ]
     ];
 
     // Fetch topic from URL, else default to empty string (home page)
-    $topic = isset($_GET['topic']) && in_array($_GET['topic'], array_keys($categoryColors)) ? $_GET['topic'] : '';
+    $topic = isset($_GET['topic']) && in_array($_GET['topic'], array_keys($categoryStyles)) ? $_GET['topic'] : '';
     // Fetch user's search input, else default to empty string
     $search = isset($_POST['search']) ? htmlspecialchars(trim($_POST['search'])) : '';
 
@@ -62,7 +80,8 @@
         forEach($rows as $row) {
 
             $likes = $row['likeCount'] ?? 0;
-            $color = $categoryColors[$row['name']];
+            $color = $categoryStyles[$row['name']]['color'];
+            $icon = $categoryStyles[$row['name']]['icon'];
             $modalID += 1;
 
             // Check if user has liked the post
@@ -72,7 +91,7 @@
             $postDiv .= "<div class='post category-{$row['name']}' data-bs-toggle='modal' data-bs-target='#modal-{$modalID}'>
                             <div>
                                 <div class='post-info'>
-                                    <span><strong style='color: {$color};'>{$row['name']}</strong> &bull; {$row['username']}</span>
+                                    <span><i class='fa-solid fa-{$icon}' style='color: {$color};'></i> &bull; {$row['username']}</span>
                                     <span style='color: lightgray;'>{$row['created_at']}</span>
                                 </div>
                                 <span class='post-title'>{$row['title']}</span>

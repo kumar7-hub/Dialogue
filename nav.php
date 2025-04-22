@@ -16,12 +16,36 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Topics</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="?topic=Technology" style="color: cyan;">Technology</a></li>
-                        <li><a class="dropdown-item" href="?topic=Travel" style="color: rgb(245, 21, 245);">Travel</a></li>
-                        <li><a class="dropdown-item" href="?topic=Food" style="color: orange;">Food</a></li>
-                        <li><a class="dropdown-item" href="?topic=Lifestyle" style="color: gold;">Lifestyle</a></li>
-                        <li><a class="dropdown-item" href="?topic=Cars" style="color: springgreen;">Cars</a></li>
-                        <li><a class="dropdown-item" href="?topic=Sports" style="color: red;">Sports</a></li>
+                        <li>
+                            <a class="dropdown-item" href="?topic=Technology">
+                                <i class='fa-solid fa-computer' style='color: cyan; margin-right: 15px;'></i>Technology
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="?topic=Travel">
+                                <i class='fa-solid fa-plane' style='color: rgb(245, 21, 245); margin-right: 17px;'></i>Travel
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="?topic=Food">
+                                <i class='fa-solid fa-utensils' style='color: orange; margin-right: 23px;'></i>Food
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="?topic=Lifestyle">
+                                <i class='fa-solid fa-user' style='color: gold; margin-right: 23px;'></i>Lifestyle
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="?topic=Cars">
+                                <i class='fa-solid fa-car' style='color: springgreen; margin-right: 20px;'></i>Cars
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="?topic=Sports">
+                                <i class='fa-solid fa-medal' style='color: red; margin-right: 19px;'></i>Sports
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
