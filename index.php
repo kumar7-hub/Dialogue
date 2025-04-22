@@ -24,37 +24,31 @@
         // Create connection to database
         $db = getConnection();
 
-        // 
+        // Add user's post comment to database
         if (isset($_SESSION['loggedIn']) && isset($_POST['commentButton']) && isset($_GET['idPost'])) {
             $userComment = htmlspecialchars(trim($_POST['userComment']));
         
-            if ($userComment !== '') {
-                
+            if (!empty($userComment)) {
                 $query = $db->prepare("INSERT INTO Comments (uid, pid, comment) VALUES (?, ?, ?)");
                 $query->bind_param('iis', $_SESSION['uid'], $_GET['idPost'], $userComment);
                 $query->execute();
             }
 
-            // 
-            if ($topic !== '') header("Location: index.php?topic={$topic}");
+            // Redirect to the same page to avoid resubmission
+            if (!empty($topic)) header("Location: index.php?topic={$topic}");
             else header("Location: index.php");
         }
 
-        //
+        // Add user's post to database
         if (isset($_SESSION['loggedIn']) && isset($_POST['postSubmit']) && isset($_POST['categoryID'])) {
             $postTitle = htmlspecialchars(trim($_POST['postTitle']));
             $postContent = htmlspecialchars(trim($_POST['postContent']));
         
-            if ($postTitle !== '' && $postContent !== '') {
-                
+            if (!empty($postTitle) && !empty($postContent)) {
                 $query = $db->prepare("INSERT INTO Post (uid, cid, title, content) VALUES (?, ?, ?, ?)");
                 $query->bind_param('iiss', $_SESSION['uid'], $_POST['categoryID'], $postTitle, $postContent);
                 $query->execute();
             }
-
-            // 
-            if ($topic !== '') header("Location: index.php?topic={$topic}");
-            else header("Location: index.php");
         }
 
         // Retrieve posts from database
@@ -112,6 +106,7 @@
 
                                     <form class='modal-footer' action='index.php?topic={$topic}&idPost={$row['pid']}' method='POST'>
                                         <textarea class='comment-field' name='userComment' cols='35' rows='15' placeholder='Comment' required></textarea>
+                                         <p class='error' style='margin-top: 10px;'></p>
                                         <input class='comment-button' type='submit' name='commentButton' value='Comment'>
                                     </form>
                                 </div>
@@ -149,7 +144,7 @@
     <div class="container">
         <h1 id="home-title">
             <?php
-                if ($topic !== '') echo $topic;
+                if (!empty($topic)) echo $topic;
                 else echo 'Home';
             ?>
         </h1>
@@ -160,15 +155,17 @@
         <?= $modals ?>
 
         <script>
-            // Fetch all elements (post modals) with class '.modal-content'
-            const posts = document.querySelectorAll('.modal-content');
+            // Fetch all elements (post modals) with class 'modal'
+            const posts = document.querySelectorAll('.modal');
 
             posts.forEach(async (post) => {
 
-                const postID = post.id;
+                const postID = post.querySelector('.modal-content').id;
                 let thumbsUp = post.querySelector('i');
                 let likeCount = post.querySelector('.like-count');
                 let modalBody = post.querySelector('.modal-body');
+                let commentForm = post.querySelector('.modal-footer');
+                let error = post.querySelector('.error');
 
                 let commentSection = document.createElement('div');
                 commentSection.classList.add('comment');
@@ -177,7 +174,7 @@
                 const postData = new FormData();
                 postData.append('post_id', postID);
 
-                // 
+                // Fetch comments for the post
                 const out = await fetch('fetchComments.php', {
                     method: 'POST', 
                     body: postData
@@ -199,13 +196,6 @@
 
                     modalBody.appendChild(commentSection);
                 }
-                // else console.log(`${postID}: ${output.message}`);
-                
-                // Add event listeners to all posts
-                // post.addEventListener('click', () => {
-                //     // console.log(post);
-
-                // });
 
                 // Add event listener to thumbs-up icon
                 thumbsUp.addEventListener('click', async () => {
@@ -213,6 +203,7 @@
                     const formData = new FormData();
                     formData.append('postID', postID);
 
+                    // Fetch like/unlike status
                     const res = await fetch('postLike.php', {
                         method: 'POST',
                         body: formData
@@ -233,20 +224,28 @@
                             likeCount.innerHTML = Number(likeCount.innerHTML) - 1;
                         }
                     } 
+                    // User not logged in
                     else alert(result.message);
                 });
 
-                // 
-                post.querySelector('.modal-footer').addEventListener('submit', event => {
+                // Comment form submission validation
+                commentForm.addEventListener('submit', event => {
                     let loggedIn = <?= isset($_SESSION['username']) ? 'true' : 'false' ?>;
+                    let userComment = commentForm.userComment.value.trim();
 
-                    if (!loggedIn) {
+                    if (!loggedIn || !userComment) {
                         event.preventDefault();
-                        alert('You must be logged in to comment on posts');
+                        !loggedIn ? alert('You must be logged in to comment on posts') : error.innerHTML = '*Comment cannot be empty*';
 
                         // Clear the comment textarea 
-                        post.querySelector('.comment-field').value = '';
+                        commentForm.reset();
                     }
+                });
+
+                // Clear error message and comment textarea after post modal closes
+                post.addEventListener('hidden.bs.modal', () => {
+                    error.innerHTML = '';
+                    commentForm.reset();
                 });
             });
         </script>
@@ -260,12 +259,12 @@
                         <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
                     </div>
 
-                    <form id='create-post-form' class='modal-body' action='index.php' method='POST' style='padding: 0px;'>
+                    <form id='create-post-form' class='modal-body' action='<?= !empty($topic) ? "index.php?topic={$topic}" : 'index.php'?>' method='POST' style='padding: 0px;'>
                         <div class="category-selector">
                             <input id="tech" type="radio" name="categoryID" value="1" hidden/>
                             <label for="tech" style="color: cyan;">Technology</label>
 
-                            <input id="travel" type="radio" name="categorID" value="2" hidden />
+                            <input id="travel" type="radio" name="categoryID" value="2" hidden />
                             <label for="travel" style="color: rgb(245, 21, 245);">Travel</label>
 
                             <input id="food" type="radio" name="categoryID" value="3" hidden />
@@ -280,18 +279,49 @@
                             <input id="sports" type="radio" name="categoryID" value="6" hidden />
                             <label for="sports" style="color: red;">Sports</label>
                         </div>
+
                         <div style='padding: 20px;'>
                             <div>
                                 <input id="title-post" class='comment-field title-post' type="text" name="postTitle" placeholder="Title" autocomplete="off" required><br>
                             </div>
-                            <textarea class='comment-field' name='postContent' cols='35' rows='15' placeholder='Text' required></textarea>
+                            <textarea id='postContent' class='comment-field' name='postContent' cols='35' rows='15' placeholder='Text' required></textarea>
+                            <p id='category-error' class='error' style="margin-top: 10px;"></p>
                             <input class='modal-footer comment-button' type='submit' name='postSubmit' value='Create'>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        
+
+        <script>
+            const createPostForm = document.getElementById('create-post-form');
+            const createPostModal = document.getElementById('createPost');
+            let error = document.getElementById('category-error');
+
+            // Create post form submission validation
+            createPostForm.addEventListener('submit', event => {
+                let categoryID = createPostForm.categoryID.value;
+                let postTitle = createPostForm.postTitle.value.trim();
+                let postContent = createPostForm.postContent.value.trim();
+               
+                // Check if fields are empty
+                if (!categoryID || !postTitle || !postContent) {
+                    event.preventDefault();
+                    !categoryID ? error.innerHTML = '*Please select a category*' : error.innerHTML = '*Please fill in all fields*';
+
+                    // Clear fields
+                    createPostForm.reset();
+                }
+            });
+
+            // Clear error message and fields after create post modal closes
+            createPostModal.addEventListener('hidden.bs.modal', () => {
+                error.innerHTML = '';
+                createPostForm.reset();
+            });
+        </script>
+
+
         <!-- <div class='modal' id='createPost'>
             <div class='modal-dialog modal-dialog-scrollable'>
                 <div class='modal-content'>
