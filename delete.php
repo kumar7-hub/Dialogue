@@ -36,23 +36,22 @@
                     $row = $result->fetch_assoc();
 
                     // Verify user's password with hash
-                    if (!password_verify($password, $row['password'])) {
-                        $error = "Invalid username or password";
-                    }
+                    if (!password_verify($password, $row['password'])) $error = "Invalid username or password";
                     else {
                         // Delete user's account
-                        $query = $db->prepare("DELETE FROM User where username = ?");
+                        $query = $db->prepare("DELETE FROM User WHERE username = ?");
                         $query->bind_param("s", $username);
                         $query->execute();
 
                         // Close connection to database 
                         closeConnection($db);
 
-                        // Redirect to home page
+                        // Log out user 
                         header("Location: logout.php");
                         exit;
                     }
                 }
+                // User does not exist
                 else $error = "Invalid username or password";
 
                 // Close connection to database 
@@ -75,6 +74,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Account</title>
+    <script src="https://kit.fontawesome.com/329329b608.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="./styles/nav.css">
