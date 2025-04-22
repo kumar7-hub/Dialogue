@@ -125,8 +125,6 @@ body {
   
 .modal-dialog {
     display: flex;
-    /* width: 100%;
-    max-width: 500px; */
     justify-content: center;
     align-items: center;
 }
@@ -276,4 +274,15 @@ body {
 .category-selector input[type="radio"]:checked + label {
     font-weight: bold;
     background-color: white;
+}
+
+.error {
+    margin-top: 20px;
+    margin-bottom: 0px;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 1vw;
+    text-align: center;
+    color: #ff4d4d;
 }
