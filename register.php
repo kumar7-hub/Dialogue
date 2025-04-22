@@ -6,7 +6,6 @@
     if (isset($_POST['register'])) {
 
         $result = false;
-        $success = "Account created successfully";
 
         $username = htmlspecialchars(trim($_POST['username']));
         $email = htmlspecialchars(trim($_POST['email']));
@@ -45,12 +44,11 @@
                 // Close connection to database 
                 closeConnection($db);
 
-                if ($row['Message'] !== $success) {
-                    $error = "Username or email already exists"; 
-                } 
+                if (!empty($row['Message'])) $error = "Username or email already exists"; 
                 else {
                     // Set session variables for global access
                     $_SESSION['loggedIn'] = true;
+                    $_SESSION['uid'] = $row['uid'];
                     $_SESSION['username'] = $username;
 
                     // Redirect to home page
@@ -75,6 +73,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
+    <script src="https://kit.fontawesome.com/329329b608.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./styles/auth.css">
 </head>
 <body>
