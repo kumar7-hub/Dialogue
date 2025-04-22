@@ -35,21 +35,22 @@
                         echo '<li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Settings</a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createPost">Create Post</a></li>
                                         <li><a class="dropdown-item" href="profile.php">Profile</a></li>
                                         <li><a class="dropdown-item" href="logout.php">Sign Out</a></li>
                                         <li><a class="dropdown-item" href="delete.php">Delete Account</a></li>
                                     </ul>
                               </li>';
+
+                        if ($index) echo '<li class="nav-item" style="margin-left: 20px;"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#createPost">Create Post</a></li>';
                     }
                 ?>
             </ul>
 
             <!-- Search Bar -->
             <?php 
+                // Display search bar only on index page
                 if ($index) {
-                    $action = 'index.php';
-                    if (isset($_GET['topic'])) $action = "{$action}?topic={$_GET['topic']}";
+                    isset($_GET['topic']) ? $action = "index.php?topic={$_GET['topic']}" : $action = 'index.php';
 
                     echo "<form class='d-flex' action='{$action}' method='POST'>
                             <div class='search-container'>
