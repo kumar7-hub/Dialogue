@@ -287,3 +287,23 @@ body {
     text-align: center;
     color: #ff4d4d;
 }
+
+.settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 7vh;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #E0E0E0;
+}
+
+.settings-link {
+    text-decoration: none;;
+}
+
+.settings-email {
+    margin-bottom: 30px;
+    color: #caf0f8; 
+    font-size: 1rem;
+}
