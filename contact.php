@@ -6,13 +6,6 @@
         'p1' => "Have a question, concern, or feedback?",
         'p2' => "Fill out this form!"
     ];
-    $categories = ['Technology', 'Travel', 'Food', 'Lifestyle', 'Cars', 'Sports'];
-
-    // Redirect to category page if topic is accessed from contact page
-    if (isset($_GET['topic']) && in_array($_GET['topic'], $categories)) {
-        header("Location: index.php?topic={$_GET['topic']}");
-        exit;
-    }
 
     if (isset($_POST['contactSubmit'])) {
 
