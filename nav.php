@@ -17,32 +17,32 @@
                     <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Topics</a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="?topic=Technology">
+                            <a class="dropdown-item" href="index.php?topic=Technology">
                                 <i class='fa-solid fa-computer' style='color: cyan; margin-right: 15px;'></i>Technology
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="?topic=Travel">
+                            <a class="dropdown-item" href="index.php?topic=Travel">
                                 <i class='fa-solid fa-plane' style='color: rgb(245, 21, 245); margin-right: 17px;'></i>Travel
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="?topic=Food">
+                            <a class="dropdown-item" href="index.php?topic=Food">
                                 <i class='fa-solid fa-utensils' style='color: orange; margin-right: 23px;'></i>Food
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="?topic=Lifestyle">
+                            <a class="dropdown-item" href="index.php?topic=Lifestyle">
                                 <i class='fa-solid fa-user' style='color: gold; margin-right: 23px;'></i>Lifestyle
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="?topic=Cars">
+                            <a class="dropdown-item" href="index.php?topic=Cars">
                                 <i class='fa-solid fa-car' style='color: springgreen; margin-right: 20px;'></i>Cars
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="?topic=Sports">
+                            <a class="dropdown-item" href="index.php?topic=Sports">
                                 <i class='fa-solid fa-medal' style='color: red; margin-right: 19px;'></i>Sports
                             </a>
                         </li>
@@ -61,7 +61,6 @@
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="profile.php">Profile</a></li>
                                         <li><a class="dropdown-item" href="logout.php">Sign Out</a></li>
-                                        <li><a class="dropdown-item" href="delete.php">Delete Account</a></li>
                                     </ul>
                               </li>';
 
