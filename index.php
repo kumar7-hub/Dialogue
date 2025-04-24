@@ -76,6 +76,7 @@
 
         $result = $query->get_result();
         if ($result->num_rows > 0) $rows = $result->fetch_all(MYSQLI_ASSOC);
+        else $error = "No results found";
 
         forEach($rows as $row) {
 
@@ -167,6 +168,10 @@
                 else echo 'Home';
             ?>
         </h1>
+
+        <?php
+            if ($error) echo "<p class='error' style='font-size: 1.3vw;'>*{$error}*</p>";
+        ?>
 
         <!-- Display Posts -->
         <?= $postDiv ?>
