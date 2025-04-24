@@ -1,14 +1,14 @@
 <?php
     require_once 'config.php';
 
-    if (isset($_SESSION['username']) && isset($_POST['postID'])) {
+    if (isset($_SESSION['uid']) && isset($_POST['postID'])) {
         try {
             // Create connection to database
             $db = getConnection();
 
             // Add or remove like from database
             $query = $db->prepare("CALL UpdatePostLikes(?, ?)");
-            $query->bind_param('si', $_SESSION['username'], $_POST['postID']);
+            $query->bind_param('ii', $_SESSION['uid'], $_POST['postID']);
             $query->execute();
 
             $result = $query->get_result();
