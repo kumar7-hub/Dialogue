@@ -78,8 +78,7 @@
         if ($result->num_rows > 0) $rows = $result->fetch_all(MYSQLI_ASSOC);
         else $error = "No results found";
 
-        forEach($rows as $row) {
-
+        foreach($rows as $row) {
             $likes = $row['likeCount'] ?? 0;
             $color = $categoryStyles[$row['name']]['color'];
             $icon = $categoryStyles[$row['name']]['icon'];

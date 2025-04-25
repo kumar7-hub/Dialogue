@@ -54,11 +54,11 @@
         <h1 id="home-title" style="margin-bottom: 10px;"><?="Hi, {$_SESSION['username']}"?></h1>
         <h3 class='settings-email'><?=$email?></h3>
 
-        <a class="post settings settings-link" href="userActivity.php?activity=userPosts">Posts</a>
+        <a class="post settings settings-link" href="userActivity.php?activity=Posts">Posts</a>
 
-        <a class="post settings settings-link" href="userActivity.php?activity=userComments">Comments</a>
+        <a class="post settings settings-link" href="userActivity.php?activity=Comments">Comments</a>
 
-        <a class="post settings settings-link" href="userActivity.php?activity=userLikes">Likes</a>
+        <a class="post settings settings-link" href="userActivity.php?activity=Likes">Likes</a>
 
         <a class="post settings settings-link" href="changePassword.php" style="margin-top: 100px;">Change Password</a>
 
