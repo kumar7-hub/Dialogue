@@ -12,8 +12,7 @@
     }
 
     try {
-
-        if (isset($_POST['updatePass'])) {
+        if (isset($_POST['updatePassButton'])) {
 
             $newPass = htmlspecialchars(trim($_POST['newPassword']));
             $confirmNewPass = htmlspecialchars(trim($_POST['confirmPassword']));
@@ -87,7 +86,7 @@
                 ?>
 
                 <!-- Update Button -->
-                <input id="profile-submit" class="submit" type="submit" name="updatePass" value="Update">
+                <input id="profile-submit" class="submit" type="submit" name="updatePassButton" value="Update">
             </form>
         </div>
     </div>
