@@ -50,8 +50,63 @@
         // Create connection to database
         $db = getConnection();
 
+        if (isset($_POST['deleteActivityButton'])) {
+
+            if (isset($_POST['deletePosts']) && count($_POST['deletePosts']) > 0) {
+                $postIds = $_POST['deletePosts'];
+                $postIdCount = count($postIds);
+                $args = array_merge([str_repeat('i', $postIdCount)], $postIds);
+
+                // Overwrite the postIDs with their addresses
+                for ($i = 1; $i <= $postIdCount; $i++) {
+                    $args[$i] = &$args[$i];
+                }
+
+                // Dynamically create the placeholders for prepared statement
+                $postIdPlaceholders = implode(', ', array_fill(0, $postIdCount, '?'));
+                // Delete user's posts from database
+                $query = $db->prepare("DELETE FROM Post WHERE pid IN ({$postIdPlaceholders})");
+                call_user_func_array([$query, 'bind_param'], $args);
+                $query->execute();
+            }
+            else if (isset($_POST['deleteComments']) && count($_POST['deleteComments']) > 0) {
+                $commentIds = $_POST['deleteComments'];
+                $commentIdCount = count($commentIds);
+                $args = array_merge([str_repeat('i', $commentIdCount)], $commentIds);
+
+                // Overwrite the commentIDs with their addresses
+                for ($i = 1; $i <= $commentIdCount; $i++) {
+                    $args[$i] = &$args[$i];
+                }
+
+                // Dynamically create the placeholders for prepared statement
+                $commentIdPlaceholders = implode(', ', array_fill(0, $commentIdCount, '?'));
+                // Delete user's comments from database
+                $query = $db->prepare("DELETE FROM Comments WHERE commentID IN ({$commentIdPlaceholders})");
+                call_user_func_array([$query, 'bind_param'], $args);
+                $query->execute();
+            }
+            else if (isset($_POST['deleteLikes']) && count($_POST['deleteLikes']) > 0) {
+                $postIds = $_POST['deleteLikes'];
+                $postIdCount = count($postIds);
+                $args = array_merge([str_repeat('i', $postIdCount)], $postIds);
+
+                // Overwrite the postIDs with their addresses
+                for ($i = 1; $i <= $postIdCount; $i++) {
+                    $args[$i] = &$args[$i];
+                }
+
+                // Dynamically create the placeholders for prepared statement
+                $postIdPlaceholders = implode(', ', array_fill(0, $postIdCount, '?'));
+                // Delete user's liked posts from database
+                $query = $db->prepare("DELETE FROM Likes WHERE pid IN ({$postIdPlaceholders})");
+                call_user_func_array([$query, 'bind_param'], $args);
+                $query->execute();
+            }
+        }
+
         if ($activity === 'Posts') {
-            // Retrieve user's created posts from databas
+            // Retrieve user's created posts from database
             $query = $db->prepare("SELECT pid, title, content, created_at, name FROM Post JOIN Category ON Post.cid = Category.cid WHERE uid = ? ORDER BY created_at DESC");
             $query->bind_param('i', $_SESSION['uid']);
             $query->execute();
@@ -83,7 +138,7 @@
         }
         else if ($activity === 'Comments') {
             // Retrieve user's comments from database
-            $query = $db->prepare("SELECT Comments.pid, title, comment, Comments.created_at, name FROM Post JOIN Comments on Post.pid = Comments.pid JOIN Category on Post.cid = Category.cid WHERE Comments.uid = ? ORDER BY Comments.created_at DESC");
+            $query = $db->prepare("SELECT commentID, title, comment, Comments.created_at, name FROM Post JOIN Comments on Post.pid = Comments.pid JOIN Category on Post.cid = Category.cid WHERE Comments.uid = ? ORDER BY Comments.created_at DESC");
             $query->bind_param('i', $_SESSION['uid']);
             $query->execute();
 
@@ -97,7 +152,7 @@
 
                 // Build commented posts html
                 $userData .=   "<div class='user-content'>
-                                    <label for='{$row['pid']}' class='user-data-info'>
+                                    <label for='{$row['commentID']}' class='user-data-info'>
                                         <div class='post-info'>
                                             <span><i class='fa-solid fa-{$icon}' style='color: {$color};'></i></span>
                                             <span style='color: lightgray;'>{$row['created_at']}</span>
@@ -108,7 +163,7 @@
                                         </div>
                                    </label>
 
-                                    <input id='{$row['pid']}' type='checkbox' name='delete{$activity}[]' value='{$row['pid']}'>
+                                    <input id='{$row['commentID']}' type='checkbox' name='delete{$activity}[]' value='{$row['commentID']}'>
                                </div>";
             }
         }
