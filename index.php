@@ -58,7 +58,7 @@
         }
 
         // Add user's post to database
-        if (isset($_SESSION['loggedIn']) && isset($_POST['postSubmit']) && isset($_POST['categoryID'])) {
+        if (isset($_SESSION['loggedIn']) && isset($_POST['createPostButton']) && isset($_POST['categoryID'])) {
             $postTitle = htmlspecialchars(trim($_POST['postTitle']));
             $postContent = htmlspecialchars(trim($_POST['postContent']));
         
@@ -238,22 +238,22 @@
                         if (result.liked) {
                             thumbsUp.classList.remove('thumbs-up');
                             thumbsUp.classList.add('thumbs-up-success');
-                            likeCount.innerHTML = Number(likeCount.innerHTML) + 1;
+                            likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1;
                         }
                         // Post is unliked
                         else {
                             thumbsUp.classList.remove('thumbs-up-success');
                             thumbsUp.classList.add('thumbs-up');
-                            likeCount.innerHTML = Number(likeCount.innerHTML) - 1;
+                            likeCount.innerHTML = parseInt(likeCount.innerHTML) - 1;
                         }
                     } 
-                    // User not logged in
+                    // User is not logged in
                     else alert(result.message);
                 });
 
                 // Comment form submission validation
                 commentForm.addEventListener('submit', event => {
-                    let loggedIn = <?= isset($_SESSION['username']) ? 'true' : 'false' ?>;
+                    let loggedIn = <?= isset($_SESSION['loggedIn']) ? 'true' : 'false' ?>;
                     let userComment = commentForm.userComment.value.trim();
 
                     if (!loggedIn || !userComment) {
@@ -309,7 +309,7 @@
                             </div>
                             <textarea id='postContent' class='comment-field' name='postContent' cols='35' rows='15' placeholder='Text' required></textarea>
                             <p id='category-error' class='error' style="margin-top: 10px;"></p>
-                            <input class='modal-footer comment-button' type='submit' name='postSubmit' value='Create'>
+                            <input class='modal-footer comment-button' type='submit' name='createPostButton' value='Create'>
                         </div>
                     </form>
                 </div>
@@ -343,55 +343,6 @@
                 createPostForm.reset();
             });
         </script>
-
-
-        <!-- <div class='modal' id='createPost'>
-            <div class='modal-dialog modal-dialog-scrollable'>
-                <div class='modal-content'>
-                    <div class='modal-header'>
-                        <h4 class='modal-title'>Tips before purchasing a new car?</h4>
-                        <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
-                    </div>
-
-                    <div class='post-info'>
-                        <div>
-                            <span><strong style='color: cyan;'>Technology</strong> &bull; pikachu &bull; <span style='color: lightgray;'>2025-04-19</span></span>
-                        </div>
-                        <div>
-                            <i class='fa-solid fa-thumbs-up thumbs-up'></i>
-                            <span class='like-count'>0</span>
-                        </div>
-                    </div>
-
-                    <div class='modal-body'>
-                        <div class="post-content">
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </div>
-
-                        <div class="comment-container">
-                            <div class='comment-header'>Comments</div>
-
-                            <div class='comment'>
-                                <div>
-                                    <div class='comment-info'>
-                                        <span style='color: cyan;'>sonic</span>
-                                        <span style='color: lightgray;'>2025-04-19</span>
-                                    </div>
-                                    <span class='comment-title'>Watch youtube reviews before buying</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <form class='modal-footer' action='index.php' method='POST'>
-                        <textarea class='comment-field' name='userComment' cols="35" rows="15" placeholder='Comment'></textarea>
-                    </form>
-
-                </div>
-            </div>
-        </div> -->
-
-
     </div>
 </body>
 </html>
