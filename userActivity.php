@@ -46,82 +46,89 @@
 
     try {
         $activity = $_GET['activity']; 
+        $name = "delete{$activity}";
 
         // Create connection to database
         $db = getConnection();
 
-        if (isset($_POST['deleteActivityButton'])) {
+        if (isset($_POST['deleteActivityButton']) && isset($_POST[$name]) && count($_POST[$name]) > 0) {
 
-            if (isset($_POST['deletePosts']) && count($_POST['deletePosts']) > 0) {
-                $postIds = $_POST['deletePosts'];
-                $postIdCount = count($postIds);
-                $args = array_merge([str_repeat('i', $postIdCount)], $postIds);
+            $query = "";
+            $ids = $_POST[$name];
 
-                // Overwrite the postIDs with their addresses
-                for ($i = 1; $i <= $postIdCount; $i++) {
-                    $args[$i] = &$args[$i];
-                }
+            // Add userID to args if deleting likes
+            if ($name === 'deleteLikes') $args = array_merge([str_repeat('i', count($ids)+1)], $ids, [$_SESSION['uid']]);
+            else $args = array_merge([str_repeat('i', count($ids))], $ids);
 
-                // Dynamically create the placeholders for prepared statement
-                $postIdPlaceholders = implode(', ', array_fill(0, $postIdCount, '?'));
-                // Delete user's posts from database
-                $query = $db->prepare("DELETE FROM Post WHERE pid IN ({$postIdPlaceholders})");
-                call_user_func_array([$query, 'bind_param'], $args);
-                $query->execute();
+            // Substract the placeholder types from idCount
+            $idCount = count($args) - 1;
+
+            // Overwrite the ids with their addresses
+            for ($i = 1; $i <= $idCount; $i++) {
+                $args[$i] = &$args[$i];
             }
-            else if (isset($_POST['deleteComments']) && count($_POST['deleteComments']) > 0) {
-                $commentIds = $_POST['deleteComments'];
-                $commentIdCount = count($commentIds);
-                $args = array_merge([str_repeat('i', $commentIdCount)], $commentIds);
 
-                // Overwrite the commentIDs with their addresses
-                for ($i = 1; $i <= $commentIdCount; $i++) {
-                    $args[$i] = &$args[$i];
-                }
+            // Substract the userID (uid) placeholder if deleting likes
+            if ($name === 'deleteLikes') $idCount--;
 
-                // Dynamically create the placeholders for prepared statement
-                $commentIdPlaceholders = implode(', ', array_fill(0, $commentIdCount, '?'));
-                // Delete user's comments from database
-                $query = $db->prepare("DELETE FROM Comments WHERE commentID IN ({$commentIdPlaceholders})");
-                call_user_func_array([$query, 'bind_param'], $args);
-                $query->execute();
-            }
-            else if (isset($_POST['deleteLikes']) && count($_POST['deleteLikes']) > 0) {
-                $postIds = $_POST['deleteLikes'];
-                $postIdCount = count($postIds);
-                $args = array_merge([str_repeat('i', $postIdCount)], $postIds);
+            // Dynamically create the placeholders for prepared statement
+            $idPlaceholders = implode(', ', array_fill(0, $idCount, '?'));
 
-                // Overwrite the postIDs with their addresses
-                for ($i = 1; $i <= $postIdCount; $i++) {
-                    $args[$i] = &$args[$i];
-                }
+            // Delete user's posts from database
+            if ($name === 'deletePosts') $query = "DELETE FROM Post WHERE pid IN ({$idPlaceholders})";
+            // Delete user's comments from database
+            else if ($name === 'deleteComments') $query = "DELETE FROM Comments WHERE commentID IN ({$idPlaceholders})";
+            // Delete user's liked posts from database
+            else if ($name === 'deleteLikes') $query = "DELETE FROM Likes WHERE pid IN ({$idPlaceholders}) AND uid = ?";
 
-                // Dynamically create the placeholders for prepared statement
-                $postIdPlaceholders = implode(', ', array_fill(0, $postIdCount, '?'));
-                // Delete user's liked posts from database
-                $query = $db->prepare("DELETE FROM Likes WHERE pid IN ({$postIdPlaceholders})");
-                call_user_func_array([$query, 'bind_param'], $args);
-                $query->execute();
+            $query = $db->prepare($query);
 
-                // Remove postID(s) of unliked post(s) from session
-                $_SESSION['postIDS'] = array_diff($_SESSION['postIDS'], $postIds);
-            }
-        }
-
-        if ($activity === 'Posts') {
-            // Retrieve user's created posts from database
-            $query = $db->prepare("SELECT pid, title, content, created_at, name FROM Post JOIN Category ON Post.cid = Category.cid WHERE uid = ? ORDER BY created_at DESC");
-            $query->bind_param('i', $_SESSION['uid']);
+            call_user_func_array([$query, 'bind_param'], $args);
             $query->execute();
 
-            $result = $query->get_result();
-            if ($result->num_rows > 0) $rows = $result->fetch_all(MYSQLI_ASSOC);
-            else $error = "You have not created any posts";
-                
-            foreach($rows as $row) {
-                $color = $categoryStyles[$row['name']]['color'];
-                $icon = $categoryStyles[$row['name']]['icon'];
+            // Remove postID(s) of unliked post(s) from session
+            if ($name === 'deleteLikes') $_SESSION['postIDS'] = array_diff($_SESSION['postIDS'], $ids);
+        }
 
+
+        // Retrieve user's created posts from database
+        if ($activity === 'Posts') $query = "SELECT pid, title, content, created_at, name 
+                                             FROM Post 
+                                             JOIN Category ON Post.cid = Category.cid 
+                                             WHERE uid = ? 
+                                             ORDER BY created_at DESC";
+
+        // Retrieve user's comments from database
+        else if ($activity === 'Comments') $query = "SELECT commentID, title, comment, Comments.created_at, name 
+                                                     FROM Post 
+                                                     JOIN Comments on Post.pid = Comments.pid 
+                                                     JOIN Category on Post.cid = Category.cid 
+                                                     WHERE Comments.uid = ? 
+                                                     ORDER BY Comments.created_at DESC";
+        
+        // Retrieve user's liked posts from database
+        else $query = "SELECT Likes.pid, title, name 
+                       FROM Likes 
+                       JOIN Post ON Likes.pid = Post.pid 
+                       JOIN Category ON Category.cid = Post.cid 
+                       WHERE Likes.uid = ?";
+
+        $query = $db->prepare($query);
+        $query->bind_param('i', $_SESSION['uid']);
+        $query->execute();
+
+        $result = $query->get_result();
+        
+        if ($result->num_rows > 0) $rows = $result->fetch_all(MYSQLI_ASSOC);
+        else if ($activity === 'Posts') $error = "You have not created any posts";
+        else if ($activity === 'Comments') $error = "You have not commented on any posts";
+        else $error = "You have not liked any posts";
+
+        foreach($rows as $row) {
+            $color = $categoryStyles[$row['name']]['color'];
+            $icon = $categoryStyles[$row['name']]['icon'];
+
+            if ($activity === 'Posts') {
                 // Build created posts html
                 $userData .=   "<div class='user-content'>
                                     <label for='{$row['pid']}' class='user-data-info'>
@@ -138,21 +145,7 @@
                                     <input id='{$row['pid']}' type='checkbox' name='delete{$activity}[]' value='{$row['pid']}'>
                                </div>";
             }
-        }
-        else if ($activity === 'Comments') {
-            // Retrieve user's comments from database
-            $query = $db->prepare("SELECT commentID, title, comment, Comments.created_at, name FROM Post JOIN Comments on Post.pid = Comments.pid JOIN Category on Post.cid = Category.cid WHERE Comments.uid = ? ORDER BY Comments.created_at DESC");
-            $query->bind_param('i', $_SESSION['uid']);
-            $query->execute();
-
-            $result = $query->get_result();
-            if ($result->num_rows > 0) $rows = $result->fetch_all(MYSQLI_ASSOC);
-            else $error = "You have not commented on any posts";
-
-            foreach($rows as $row) {
-                $color = $categoryStyles[$row['name']]['color'];
-                $icon = $categoryStyles[$row['name']]['icon'];
-
+            else if ($activity === 'Comments') {
                 // Build commented posts html
                 $userData .=   "<div class='user-content'>
                                     <label for='{$row['commentID']}' class='user-data-info'>
@@ -169,21 +162,7 @@
                                     <input id='{$row['commentID']}' type='checkbox' name='delete{$activity}[]' value='{$row['commentID']}'>
                                </div>";
             }
-        }
-        else {
-            // Retrieve user's liked posts from database
-            $query = $db->prepare("SELECT Likes.pid, title, name FROM Likes JOIN Post ON Likes.pid = Post.pid JOIN Category ON Category.cid = Post.cid WHERE Likes.uid = ?");
-            $query->bind_param('i', $_SESSION['uid']);
-            $query->execute();
-
-            $result = $query->get_result();
-            if ($result->num_rows > 0) $rows = $result->fetch_all(MYSQLI_ASSOC);
-            else $error = "You have not liked any posts";
-
-            foreach ($rows as $row) {
-                $color = $categoryStyles[$row['name']]['color'];
-                $icon = $categoryStyles[$row['name']]['icon'];
-
+            else {
                 // Build liked posts html
                 $userData .=   "<div class='user-content'>
                                     <label for='{$row['pid']}' class='user-data-info'>
@@ -196,6 +175,7 @@
                                     <input id='{$row['pid']}' type='checkbox' name='delete{$activity}[]' value='{$row['pid']}'>
                                </div>";
             }
+
         }
 
         // Close connection to database 
