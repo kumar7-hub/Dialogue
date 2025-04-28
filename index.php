@@ -194,13 +194,13 @@
                 commentSection.classList.add('comment');
                 
                 // Source: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest_API/Using_FormData_Objects
-                const postData = new FormData();
-                postData.append('post_id', postID);
+                const formData = new FormData();
+                formData.append('postID', postID);
 
                 // Fetch comments for the post
                 const out = await fetch('fetchComments.php', {
                     method: 'POST', 
-                    body: postData
+                    body: formData
                 });
 
                 const output = await out.json();
@@ -222,9 +222,6 @@
 
                 // Add event listener to thumbs-up icon
                 thumbsUp.addEventListener('click', async () => {
-
-                    const formData = new FormData();
-                    formData.append('postID', postID);
 
                     // Fetch like/unlike status
                     const res = await fetch('postLike.php', {
