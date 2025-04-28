@@ -102,6 +102,9 @@
                 $query = $db->prepare("DELETE FROM Likes WHERE pid IN ({$postIdPlaceholders})");
                 call_user_func_array([$query, 'bind_param'], $args);
                 $query->execute();
+
+                // Remove postID(s) of unliked post(s) from session
+                $_SESSION['postIDS'] = array_diff($_SESSION['postIDS'], $postIds);
             }
         }
 
