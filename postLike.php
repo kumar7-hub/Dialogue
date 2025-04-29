@@ -1,7 +1,7 @@
 <?php
     require_once 'config.php';
 
-    if (isset($_SESSION['uid']) && isset($_POST['postID'])) {
+    if (isset($_SESSION['loggedIn']) && isset($_POST['postID'])) {
         try {
             // Create connection to database
             $db = getConnection();

@@ -5,15 +5,7 @@
     $postIDS = [];
     $categories = ['Technology', 'Travel', 'Food', 'Lifestyle', 'Cars', 'Sports'];
 
-    // Redirect to category page if topic is accessed from login page
-    if (isset($_GET['topic']) && in_array($_GET['topic'], $categories)) {
-        header("Location: index.php?topic={$_GET['topic']}");
-        exit;
-    }
-
     if (isset($_POST['login'])) {
-
-        $result = false;
 
         $username = htmlspecialchars(trim($_POST['username']));
         $password = htmlspecialchars(trim($_POST['password']));
@@ -68,6 +60,7 @@
                         exit;
                     }
                 }
+                // User does not exist
                 else $error = "Invalid username or password";
             }
             catch (Exception $e) {

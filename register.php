@@ -5,8 +5,6 @@
 
     if (isset($_POST['register'])) {
 
-        $result = false;
-
         $username = htmlspecialchars(trim($_POST['username']));
         $email = htmlspecialchars(trim($_POST['email']));
         $password = htmlspecialchars(trim($_POST['password']));

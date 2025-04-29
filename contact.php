@@ -9,9 +9,9 @@
 
     if (isset($_POST['contactSubmit'])) {
 
-        $name = htmlspecialchars($_POST['name']);
-        $email = htmlspecialchars($_POST['email']);
-        $userMessage = htmlspecialchars($_POST['message']);
+        $name = htmlspecialchars(trim($_POST['name']));
+        $email = htmlspecialchars(trim($_POST['email']));
+        $userMessage = htmlspecialchars(trim($_POST['message']));
 
         // Check if fields are empty 
         if (empty($name) || empty($email) || empty($userMessage)) $error = "Please fill in all fields";
